@@ -14,8 +14,13 @@ app.post('/validate', (req, res) => res.sendStatus(200));
 app.post('/publish',  (req, res) => res.sendStatus(200));
 app.post('/stop',     (req, res) => res.sendStatus(200));
 
-app.post('/execute', (req, res) => {
+app.post('/execute', async (req, res) => {
+  console.log("🔥🔥 EXECUTE RECIBIDO DESDE SALESFORCE 🔥🔥");
+  console.log(JSON.stringify(req.body, null, 2));
+
   return res.status(200).json({ ok: true });
 });
+``
+
 
 app.listen(8080);
