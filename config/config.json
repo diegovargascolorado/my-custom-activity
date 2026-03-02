@@ -17,15 +17,16 @@
     "execute": {
       "inArguments": [],
       "outArguments": [],
-      "url": "https://<TU_HOST>/execute",
+      "url": "https://my-custom-activity-j8g1.onrender.com/execute",
       "verb": "POST"
     }
   },
   "configurationArguments": {
     "applicationExtensionKey": "<APP_KEY>",
-    "save":     { "url": "https://<TU_HOST>/save" },
-    "publish":  { "url": "https://<TU_HOST>/publish" },
-    "validate": { "url": "https://<TU_HOST>/validate" },
-    "stop":     { "url": "https://<TU_HOST>/stop" }
+    "save":     { "url": "https://my-custom-activity-j8g1.onrender.com/save" },
+    "publish":  { "url": "https://my-custom-activity-j8g1.onrender.com/publish" },
+    "validate": { "url": "https://my-custom-activity-j8g1.onrender.com/validate" },
+    "stop":     { "url": "https://my-custom-activity-j8g1.onrender.com/stop" }
   }
+
 }
