@@ -1,40 +1,24 @@
-define(['postmonger'], function(Postmonger) {
-  'use strict';
+function onClickedNext() {
+  // Indicador visual para debug (temporal)
+  try {
+    const div = document.createElement('div');
+    div.textContent = 'onClickedNext ejecutado';
+    div.style = 'position:fixed;bottom:8px;right:8px;background:#e6ffed;color:#0366d6;padding:8px;border:1px solid #b3e6c1;border-radius:6px;font:12px system-ui;z-index:9999';
+    document.body.appendChild(div);
+  } catch (e) {}
 
-  const connection = new Postmonger.Session();
-  let activity = {};
-  let callbacks = {};
+  const fields = callbacks.getFields ? callbacks.getFields() : {};
+  activity.arguments = activity.arguments || {};
+  activity.arguments.execute = activity.arguments.execute || {};
+  activity.arguments.execute.inArguments = [
+    { apiUrl: fields.apiUrl || "" }
+  ];
 
-  function init(cb) {
-    callbacks = cb || {};
-    connection.trigger('ready');
-    connection.trigger('requestTokens');
-    connection.trigger('requestEndpoints');
+  activity.metaData = activity.metaData || {};
+  activity.metaData.isConfigured = true;
 
-    connection.on('initActivity', onInit);
-    connection.on('clickedNext', onClickedNext);
-  }
+  // Log de apoyo (lo verás si abres la UI fuera de JB)
+  console.log('UPDATE ACTIVITY PAYLOAD', activity);
 
-  function onInit(data) {
-    activity = data || {};
-    const inArgs = activity?.arguments?.execute?.inArguments || [];
-    const saved = Object.assign({}, ...inArgs);
-    callbacks.setFields && callbacks.setFields(saved);
-  }
-
-  function onClickedNext() {
-    const fields = callbacks.getFields ? callbacks.getFields() : {};
-    activity.arguments = activity.arguments || {};
-    activity.arguments.execute = activity.arguments.execute || {};
-    activity.arguments.execute.inArguments = [
-      { apiUrl: fields.apiUrl || "" }
-    ];
-
-    activity.metaData = activity.metaData || {};
-    activity.metaData.isConfigured = true;
-
-    connection.trigger('updateActivity', activity);
-  }
-
-  return { init };
-});
+  connection.trigger('updateActivity', activity);
+}
