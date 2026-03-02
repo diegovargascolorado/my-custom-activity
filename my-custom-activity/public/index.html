@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mi Custom Activity</title>
+</head>
+<body>
+  <h2>Configurar Actividad</h2>
+
+  <label>API URL:</label>
+  <input id="apiUrl" />
+
+  <script src="https://unpkg.com/postmonger"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+
+  <script>
+    require.config({
+      paths: {
+        postmonger: '/js/postmonger',
+        customActivity: '/src/customActivity'
+      }
+    });
+
+    require(['customActivity'], function(activity) {
+      activity.init({
+        getFields: () => ({
+          apiUrl: document.getElementById('apiUrl').value.trim()
+        }),
+        setFields: (vals={}) => {
+          if (vals.apiUrl) document.getElementById('apiUrl').value = vals.apiUrl;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
