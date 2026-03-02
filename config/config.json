@@ -22,7 +22,7 @@
     }
   },
   "configurationArguments": {
-    "applicationExtensionKey": "<APP_KEY>",
+    "applicationExtensionKey": "a1d6f56c-5822-4328-bceb-515f8b593be4",
     "save":     { "url": "https://my-custom-activity-j8g1.onrender.com/save" },
     "publish":  { "url": "https://my-custom-activity-j8g1.onrender.com/publish" },
     "validate": { "url": "https://my-custom-activity-j8g1.onrender.com/validate" },
@@ -30,3 +30,4 @@
   }
 
 }
+
