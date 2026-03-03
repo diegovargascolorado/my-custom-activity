@@ -3,8 +3,8 @@
   "type": "REST",
   "metaData": {
     "category": "message",
-    "icon": "images/icon_coomeva_v6.png",
-    "iconSmall": "images/icon_coomeva_v6.png",
+    "icon": "https://my-custom-activity-1.onrender.com/images/icon_coomeva_v6_v2.png",
+    "iconSmall": "https://my-custom-activity-1.onrender.com/images/icon_coomeva_v6_v2.png"
     "configOnDrop": true,
     "isConfigured": false
   },
@@ -30,3 +30,4 @@
     "stop": { "url": "https://my-custom-activity-1.onrender.com/stop" }
   }
 }
+
