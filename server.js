@@ -4,55 +4,71 @@ const express = require("express");
 
 const app = express();
 
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
+// Static (public/)
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =========================
-   HEALTH CHECK (MUY IMPORTANTE)
-========================= */
+/* =========================================
+   HEALTH CHECK
+========================================= */
 app.get("/", (req, res) => {
   return res.status(200).send("OK - my-custom-activity is running");
 });
 
-/* =========================
-   CONFIG.JSON
-========================= */
-app.get("/config.json", (req, res) => {
-  try {
-    const cfgPath = path.join(__dirname, "config", "config.json");
+/* =========================================
+   DIAGNOSTIC (para ver rutas y archivos)
+========================================= */
+app.get("/_debug", (req, res) => {
+  const cfgPath = path.join(__dirname, "config", "config.json");
+  const iconPath = path.join(__dirname, "public", "images", "icon_coomeva_v6.png");
 
-    if (!fs.existsSync(cfgPath)) {
-      // Esto te explica el error en pantalla
-      return res
-        .status(404)
-        .send(`config.json NOT FOUND at: ${cfgPath}`);
+  return res.status(200).json({
+    cwd: process.cwd(),
+    dirname: __dirname,
+    exists: {
+      config_json: fs.existsSync(cfgPath),
+      icon_png: fs.existsSync(iconPath)
+    },
+    expected_paths: {
+      config_json: cfgPath,
+      icon_png: iconPath
     }
-
-    return res.sendFile(cfgPath);
-  } catch (e) {
-    return res.status(500).send(`ERROR serving config.json: ${e.message}`);
-  }
+  });
 });
 
-/* =========================
-   LIFECYCLE ENDPOINTS
-========================= */
+/* =========================================
+   CONFIG.JSON (SFMC lo consume)
+========================================= */
+app.get("/config.json", (req, res) => {
+  const cfgPath = path.join(__dirname, "config", "config.json");
+
+  if (!fs.existsSync(cfgPath)) {
+    return res.status(404).send(`config.json NOT FOUND at: ${cfgPath}`);
+  }
+
+  return res.sendFile(cfgPath);
+});
+
+/* =========================================
+   LIFECYCLE ENDPOINTS (Obligatorios)
+========================================= */
 app.post("/save", (req, res) => res.status(200).json({ success: true }));
 app.post("/validate", (req, res) => res.status(200).json({ success: true }));
 app.post("/publish", (req, res) => res.status(200).json({ success: true }));
 app.post("/stop", (req, res) => res.status(200).json({ success: true }));
 
-/* =========================
-   EXECUTE
-========================= */
+/* =========================================
+   EXECUTE (Journey)
+========================================= */
 app.post("/execute", async (req, res) => {
   try {
     console.log("🔥 /execute desde SFMC");
     console.log(JSON.stringify(req.body || {}, null, 2));
 
+    // Node 22 trae fetch nativo
     if (typeof globalThis.fetch !== "function") {
       throw new Error("fetch no está disponible (usa Node 18+).");
     }
@@ -82,13 +98,19 @@ app.post("/execute", async (req, res) => {
   }
 });
 
-/* =========================
-   404 HANDLER (PARA VER QUÉ ESTÁ FALLANDO)
-========================= */
+/* =========================================
+   404 handler (para ver rutas faltantes)
+========================================= */
 app.use((req, res) => {
   return res.status(404).send(`Not Found: ${req.method} ${req.originalUrl}`);
 });
 
+/* =========================================
+   LISTEN (Render)
+========================================= */
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`🚀 Running on port ${PORT}`));
 
+// IMPORTANTE: escuchar en 0.0.0.0
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+});
