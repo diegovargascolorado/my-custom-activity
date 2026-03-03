@@ -19,19 +19,20 @@
     "execute": {
       "inArguments": [],
       "outArguments": [],
-      "url": "https://my-custom-activity-j8g1.onrender.com/execute",
+      "url": "https://my-custom-activity-1.onrender.com/execute",
       "verb": "POST"
     }
   },
   "configurationArguments": {
     "applicationExtensionKey": "f71a1188-c0ef-4aa6-9347-6be8934dd0da",
-    "save":     { "url": "https://my-custom-activity-j8g1.onrender.com/save" },
-    "publish":  { "url": "https://my-custom-activity-j8g1.onrender.com/publish" },
-    "validate": { "url": "https://my-custom-activity-j8g1.onrender.com/validate" },
-    "stop":     { "url": "https://my-custom-activity-j8g1.onrender.com/stop" }
+    "save":     { "url": "https://my-custom-activity-1.onrender.com/save" },
+    "publish":  { "url": "https://my-custom-activity-1.onrender.com/publish" },
+    "validate": { "url": "https://my-custom-activity-1.onrender.com/validate" },
+    "stop":     { "url": "https://my-custom-activity-1.onrender.com/stop" }
   }
 
 }
+
 
 
 
