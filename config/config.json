@@ -1,13 +1,13 @@
 {
   "workflowApiVersion": "1.1",
   "type": "REST",
-  "metaData": {
-    "category": "message",
-    "icon": "https://my-custom-activity-1.onrender.com/images/icon_coomeva_v6_v2.png",
-    "iconSmall": "https://my-custom-activity-1.onrender.com/images/icon_coomeva_v6_v2.png"
-    "configOnDrop": true,
-    "isConfigured": false
-  },
+ "metaData": {
+  "category": "message",
+  "icon": "icon.png",
+  "iconSmall": "icon.png",
+  "configOnDrop": true,
+  "isConfigured": false
+},
   "lang": {
     "es-ES": {
       "name": "Mi Actividad REST",
@@ -30,4 +30,5 @@
     "stop": { "url": "https://my-custom-activity-1.onrender.com/stop" }
   }
 }
+
 
