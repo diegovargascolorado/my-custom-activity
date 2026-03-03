@@ -1,14 +1,13 @@
 {
   "workflowApiVersion": "1.1",
   "type": "REST",
-  
-"metaData": {
-  "category": "message",
-  "icon": "images/icon_coomeva_v6.png",
-  "iconSmall": "images/icon_coomeva_v6.png",
-  "configOnDrop": true,
-  "isConfigured": false
-}
+  "metaData": {
+    "category": "message",
+    "icon": "images/icon_coomeva_v6.png",
+    "iconSmall": "images/icon_coomeva_v6.png",
+    "configOnDrop": true,
+    "isConfigured": false
+  },
   "lang": {
     "es-ES": {
       "name": "Mi Actividad REST",
@@ -25,27 +24,9 @@
   },
   "configurationArguments": {
     "applicationExtensionKey": "f71a1188-c0ef-4aa6-9347-6be8934dd0da",
-    "save":     { "url": "https://my-custom-activity-1.onrender.com/save" },
-    "publish":  { "url": "https://my-custom-activity-1.onrender.com/publish" },
+    "save": { "url": "https://my-custom-activity-1.onrender.com/save" },
+    "publish": { "url": "https://my-custom-activity-1.onrender.com/publish" },
     "validate": { "url": "https://my-custom-activity-1.onrender.com/validate" },
-    "stop":     { "url": "https://my-custom-activity-1.onrender.com/stop" }
+    "stop": { "url": "https://my-custom-activity-1.onrender.com/stop" }
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
