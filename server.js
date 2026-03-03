@@ -1,59 +1,60 @@
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 
 const app = express();
 
-/* =========================================
-   MIDDLEWARES
-========================================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos (iconos, index.html, etc.)
+// Static files
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =========================================
-   CONFIG.JSON (Requerido por SFMC)
-========================================= */
+/* =========================
+   HEALTH CHECK (MUY IMPORTANTE)
+========================= */
+app.get("/", (req, res) => {
+  return res.status(200).send("OK - my-custom-activity is running");
+});
+
+/* =========================
+   CONFIG.JSON
+========================= */
 app.get("/config.json", (req, res) => {
-  return res.sendFile(path.join(__dirname, "config", "config.json"));
+  try {
+    const cfgPath = path.join(__dirname, "config", "config.json");
+
+    if (!fs.existsSync(cfgPath)) {
+      // Esto te explica el error en pantalla
+      return res
+        .status(404)
+        .send(`config.json NOT FOUND at: ${cfgPath}`);
+    }
+
+    return res.sendFile(cfgPath);
+  } catch (e) {
+    return res.status(500).send(`ERROR serving config.json: ${e.message}`);
+  }
 });
 
-/* =========================================
-   LIFECYCLE ENDPOINTS (OBLIGATORIOS)
-   save / validate / publish / stop
-========================================= */
-app.post("/save", (req, res) => {
-  console.log("✅ /save", JSON.stringify(req.body || {}, null, 2));
-  return res.status(200).json({ success: true });
-});
+/* =========================
+   LIFECYCLE ENDPOINTS
+========================= */
+app.post("/save", (req, res) => res.status(200).json({ success: true }));
+app.post("/validate", (req, res) => res.status(200).json({ success: true }));
+app.post("/publish", (req, res) => res.status(200).json({ success: true }));
+app.post("/stop", (req, res) => res.status(200).json({ success: true }));
 
-app.post("/validate", (req, res) => {
-  console.log("✅ /validate", JSON.stringify(req.body || {}, null, 2));
-  return res.status(200).json({ success: true });
-});
-
-app.post("/publish", (req, res) => {
-  console.log("✅ /publish", JSON.stringify(req.body || {}, null, 2));
-  return res.status(200).json({ success: true });
-});
-
-app.post("/stop", (req, res) => {
-  console.log("✅ /stop", JSON.stringify(req.body || {}, null, 2));
-  return res.status(200).json({ success: true });
-});
-
-/* =========================================
-   EXECUTE (CUANDO EL JOURNEY EJECUTA)
-========================================= */
+/* =========================
+   EXECUTE
+========================= */
 app.post("/execute", async (req, res) => {
   try {
     console.log("🔥 /execute desde SFMC");
     console.log(JSON.stringify(req.body || {}, null, 2));
 
-    // Fetch nativo (Node 18+)
     if (typeof globalThis.fetch !== "function") {
-      throw new Error("fetch no está disponible. Usa Node 18+ o instala node-fetch.");
+      throw new Error("fetch no está disponible (usa Node 18+).");
     }
 
     const payloadFromMC = req.body || {};
@@ -81,11 +82,13 @@ app.post("/execute", async (req, res) => {
   }
 });
 
-/* =========================================
-   PUERTO (RENDER USA process.env.PORT)
-========================================= */
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+/* =========================
+   404 HANDLER (PARA VER QUÉ ESTÁ FALLANDO)
+========================= */
+app.use((req, res) => {
+  return res.status(404).send(`Not Found: ${req.method} ${req.originalUrl}`);
 });
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`🚀 Running on port ${PORT}`));
+
