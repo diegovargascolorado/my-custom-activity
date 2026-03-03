@@ -1,56 +1,91 @@
-const path = require('path');
-const express = require('express');
+const path = require("path");
+const express = require("express");
+const fetch = require("node-fetch"); // Asegura compatibilidad
 const app = express();
+
+/* =========================================
+   CONFIGURACIÓN BÁSICA
+========================================= */
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Servir archivos estáticos (iconos, index.html, etc)
+app.use(express.static(path.join(__dirname, "public")));
 
-app.get('/config.json', (req, res) => {
-  res.sendFile(path.join(__dirname, 'config', 'config.json'));
+/* =========================================
+   CONFIG.JSON (Requerido por SFMC)
+========================================= */
+app.get("/config.json", (req, res) => {
+  res.sendFile(path.join(__dirname, "config", "config.json"));
 });
 
-app.post('/save',     (req, res) => res.sendStatus(200));
-app.post('/validate', (req, res) => res.sendStatus(200));
-app.post('/publish',  (req, res) => res.sendStatus(200));
-app.post('/stop',     (req, res) => res.sendStatus(200));
+/* =========================================
+   LIFECYCLE ENDPOINTS (OBLIGATORIOS)
+   Documentación oficial Salesforce
+========================================= */
 
-// server.js (solo el handler de /execute)
-app.post('/execute', async (req, res) => {
+app.post("/save", (req, res) => {
+  console.log("SAVE");
+  return res.status(200).json({ success: true });
+});
+
+app.post("/validate", (req, res) => {
+  console.log("VALIDATE");
+  return res.status(200).json({ success: true });
+});
+
+app.post("/publish", (req, res) => {
+  console.log("PUBLISH");
+  return res.status(200).json({ success: true });
+});
+
+app.post("/stop", (req, res) => {
+  console.log("STOP");
+  return res.status(200).json({ success: true });
+});
+
+/* =========================================
+   EXECUTE (CUANDO EL JOURNEY CORRE)
+========================================= */
+
+app.post("/execute", async (req, res) => {
   try {
-    // 1) Log para ver en Render que llegó la ejecución
     console.log("🔥 EXECUTE desde SFMC");
     console.log(JSON.stringify(req.body, null, 2));
 
-    // 2) Preparar datos (lo que envía Marketing Cloud a tu actividad)
     const payloadFromMC = req.body || {};
     const inArgs = payloadFromMC.inArguments || [];
-    const merged = Object.assign({}, ...inArgs); // Une inArguments [{...},{...}] -> {...}
+    const merged = Object.assign({}, ...inArgs);
 
-    // 3) URL del receptor (webhook.site)
     const webhookUrl = "https://webhook.site/cc26c3bf-8246-468b-a384-cafcc34143ee";
 
-    // 4) Reenviar al webhook (lo verás en tiempo real)
     const fResp = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        receivedFromSFMC: merged,        // lo que tú configuraste en inArguments (p.ej. apiUrl)
-        originalMCpayload: payloadFromMC // payload completo que MC te envió
+        receivedFromSFMC: merged,
+        originalMCpayload: payloadFromMC
       })
     });
 
-    // 5) Opcional: leer respuesta del receptor por debug
     const respText = await fResp.text();
     console.log("Webhook response:", fResp.status, respText);
 
-    // 6) Responder 200 a SFMC (Success en el Journey)
     return res.status(200).json({ ok: true });
+
   } catch (err) {
     console.error("ERROR /execute:", err);
     return res.status(500).json({ error: err.message });
   }
 });
 
+/* =========================================
+   PUERTO DINÁMICO (IMPORTANTE EN RENDER)
+========================================= */
 
-app.listen(8080);
+const PORT = process.env.PORT || 8080;
 
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
