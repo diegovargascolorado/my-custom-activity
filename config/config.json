@@ -3,7 +3,7 @@
   "type": "REST",
   
 "metaData": {
-  "icon": "images/icon_coomeva_v6.png",
+  "icon": "icon_coomeva_v6.png",
   "category": "message",
   "configOnDrop": true,
   "isConfigured": false
@@ -31,6 +31,7 @@
   }
 
 }
+
 
 
 
