@@ -77,7 +77,7 @@ app.post("/execute", async (req, res) => {
     const inArgs = payloadFromMC.inArguments || [];
     const merged = Object.assign({}, ...inArgs);
 
-    const webhookUrl = "https://webhook.site/cc26c3bf-8246-468b-a384-cafcc34143ee";
+    const webhookUrl = "https://webhook.site/b9a8d322-a4ae-4f29-9bd8-a99bc171e02f";
 
     const fResp = await fetch(webhookUrl, {
       method: "POST",
@@ -114,3 +114,4 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });
+
